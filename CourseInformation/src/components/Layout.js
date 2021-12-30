@@ -80,7 +80,7 @@ export default function Layout({ children }) {
       {/*------------------app bar-----------------*/}
       <AppBar className={classes.appbar} elevation={0}>
         <Toolbar>
-          <Typography color="#f9f9f9" className={classes.header}>
+          <Typography className={classes.header}>
             選課資訊交流平台(◍•ᴗ•◍)
           </Typography>
 

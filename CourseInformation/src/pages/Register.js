@@ -65,10 +65,11 @@ export default function Register() {
         return;
       })
       .catch((error) => {
-        console.log(JSON.stringify(error));
-        if (error.response.status == 422) {
-          window.alert(JSON.stringify("資訊驗證錯誤已存在"));
-        }
+        console.log(JSON.stringify(error.response.data));
+        // if (error.response.data.message == "email") {
+        //   window.alert(JSON.stringify("資訊驗證錯誤已存在"));
+        // }
+        window.alert(JSON.stringify(error.response.data.message));
       });
   };
   return (

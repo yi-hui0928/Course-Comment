@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
 import { url } from "../utils/localStorge";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,27 +42,29 @@ export default function Login() {
     e.preventDefault();
 
     //打api
-    fetch(url + "login", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-      },
-      //設定參數
-      body: new URLSearchParams({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((res) => res.json())
+    //TODO: 不應該存資訊 應該每次確認是否有admin權限吧?
+    axios
+      .post(
+        url + "login",
+        new URLSearchParams({
+          email: email,
+          password: password,
+        }),
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      )
       .then((response) => {
-        console.log(response);
-        localStorage.setItem("userData", JSON.stringify(response.data));
+        console.log(response.data.data);
+        localStorage.setItem("userData", JSON.stringify(response.data.data));
         History.push("/");
         return;
       })
       .catch((error) => {
-        console.log(error);
-        History.push("/404");
+        console.log(error.response.data);
+        window.alert(error.response.data.message);
       });
   };
 

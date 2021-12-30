@@ -6,7 +6,7 @@ import Layout from "./components/Layout";
 import CreateMessage from "./pages/CreateMessage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-
+import NoFoundPage from "./pages/NoFoundPage";
 import Member from "./pages/Member";
 function App() {
   return (
@@ -33,6 +33,9 @@ function App() {
           </Route>
           <Route path="/CreateMessage">
             <CreateMessage />
+          </Route>
+          <Route path="/*">
+            <NoFoundPage />
           </Route>
         </Switch>
       </Layout>
