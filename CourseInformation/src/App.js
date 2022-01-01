@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Courses from './pages/Courses'
 import Comments from './pages/Comments'
+import Messages from './pages/Messages'
 import CreateComment from './pages/CreateComment';
 import Layout from './components/Layout';
 import CreateMessage from './pages/CreateMessage';
@@ -16,6 +17,9 @@ function App() {
           </Route>
           <Route path="/Comments/:id">
             <Comments />
+          </Route>
+          <Route path="/Messages/:id">
+            <Messages />
           </Route>
           <Route path="/CreateComment">
             <CreateComment />

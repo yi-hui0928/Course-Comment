@@ -16,6 +16,9 @@ import { Button } from '@material-ui/core'
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min'
+import { Divider } from '@material-ui/core'
+import Rating from '@material-ui/lab/Rating';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,22 +117,26 @@ export default function Comments() {
       </Typography>
       <List  className={classes.root}>
         {comments.map(comment => (
-          <ListItem>
+          <><ListItem>
             <ListItemAvatar>
               <Avatar>
                 {comment.category}
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={comment.author} secondary={comment.comment}/>  
+            <ListItemText primary={comment.author} secondary={comment.comment}>
+              <br />Assignment: {comment.assignment}   {/*不知道為什麼沒有顯示出來 */}
+              <br />Grading: {comment.grading}
+            </ListItemText>
+            <Rating name="half-rating-read" defaultValue={comment.rating} precision={0.5} readOnly />
             <IconButton>
-              <KeyboardArrowRightIcon onClick={()=>{history.push('/CreateMessage')}}/>   
-            </IconButton>      
+              <KeyboardArrowRightIcon onClick={() => { history.push('/Messages/' + comment.id) } } />
+            </IconButton>
             <ListItemSecondaryAction>
-              <IconButton edge="end">                
-                <DeleteOutlined onClick={()=>handleDelete(comment.id)}/>
+              <IconButton edge="end">
+                <DeleteOutlined onClick={() => handleDelete(comment.id)} />
               </IconButton>
-             </ListItemSecondaryAction>
-          </ListItem>
+            </ListItemSecondaryAction>
+          </ListItem><Divider variant="inset" component="li" /></>
         ))}
         
       </List>
