@@ -4,6 +4,9 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 export const url = "http://localhost:8000/api/";
 
 export function getToken() {
+  if (!isLogin()) {
+    return;
+  }
   const data = JSON.parse(localStorage.getItem("userData"));
   const { api_token } = data;
 
@@ -18,10 +21,12 @@ export function getName() {
 }
 
 export function getId() {
+  if (!isLogin()) {
+    return;
+  }
   const data = JSON.parse(localStorage.getItem("userData"));
 
   const { id } = data;
-  console.log(id);
   return id;
 }
 export function isLogin() {

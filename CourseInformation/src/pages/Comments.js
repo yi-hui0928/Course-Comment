@@ -5,29 +5,25 @@ import {
   Container,
   List,
   ListItem,
-  ListItemText,
+  IconButton,
   Typography,
 } from "@material-ui/core";
+import { DeleteOutline } from "@material-ui/icons";
 import { Card } from "@material-ui/core";
 import { CardHeader } from "@material-ui/core";
 import { CardContent } from "@material-ui/core";
 import { Avatar } from "@material-ui/core";
-import { DeleteOutlined } from "@material-ui/icons";
-import { IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { Button } from "@material-ui/core";
 import KeyboardVoiceIcon from "@material-ui/icons/KeyboardVoice";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
-import { url } from "../utils/localStorge";
-import CreateComment from "./CreateComment";
+import { url, getId, getToken } from "../utils/localStorge";
 import { Divider } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
-
+import CommentUpdate from "../components/CommentUpdate";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -54,8 +50,7 @@ export default function Comments() {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  //TODO: 測試是否能夠成功發請求
-  useEffect(() => {
+  function getComments() {
     // Http://localhost:8000/api/course/2/comments/
     axios
       .get(url + "course/" + id + "/comments/", {
@@ -64,6 +59,7 @@ export default function Comments() {
         },
       })
       .then((response) => {
+        console.log(response.data);
         const data = response.data;
         setCurrentCourse(data.course);
         setComments(data.comments);
@@ -71,19 +67,37 @@ export default function Comments() {
         return;
       })
       .catch((error) => {
-        console.log(error.response.data);
-        window.alert(error.response.data.message);
+        console.log(error.response);
       });
+  }
+  useEffect(() => {
+    getComments();
   }, [id]);
 
   //TODO: delete 和 update 和create
-  const handleDelete = async (id) => {
-    await fetch("http://localhost:8000/comments/" + id, {
-      method: "DELETE",
-    });
+  const handleDelete = (id) => {
+    let result = window.confirm("確定刪除?");
 
-    const newComments = comments.filter((comment) => comment.id !== id);
-    setComments(newComments);
+    if (result) {
+      axios
+        .delete(url + "comments/" + id, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+            Accept: "application/json",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+          console.log(error.response);
+          window.alert(error.response.data.message);
+        });
+
+      const newComments = comments.filter((comment) => comment.id !== id);
+      setComments(newComments);
+    }
   };
 
   if (isLoading) {
@@ -99,17 +113,17 @@ export default function Comments() {
           subheader={currentCourse.teacher}
         />
         <CardContent>
-          <Typography variant="body2" color="textSecondary">
+          <Typography variant="body2">
             學期: {currentCourse.semester}
           </Typography>
-          <Typography variant="body2" color="textSecondary">
+          <Typography variant="body2">
             系所: {currentCourse.department}
           </Typography>
-          <Typography variant="body2" color="textSecondary">
+          <Typography variant="body2">
             學分數: {currentCourse.credit}
           </Typography>
           <p>
-            <Typography variant="body1" color="textPrimary">
+            <Typography variant="body1">
               課程簡介:
               <br />
               {currentCourse.info}
@@ -134,52 +148,75 @@ export default function Comments() {
       </Typography>
       <List className={classes.root}>
         {comments.map((comment) => (
-          <>
-            <ListItem key={comment.id}>
-              <ListItemAvatar>
-                <Avatar>{comment.author}</Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={comment.author}
-                secondary={comment.comment}
-              />
-              <IconButton>
-                <KeyboardArrowRightIcon
-                  onClick={() => {
-                    history.push("/CreateMessage");
-                  }}
-                />
-              </IconButton>
-              <ListItemText
-                primary={comment.author}
-                secondary={comment.comment}
-              >
-                <br />
-                Assignment: {comment.assignment} {/*不知道為什麼沒有顯示出來 */}
-                <br />
-                Grading: {comment.grading}
-              </ListItemText>
-              <Rating
-                name="half-rating-read"
-                defaultValue={comment.rating}
-                precision={0.5}
-                readOnly
-              />
-              <IconButton>
-                <KeyboardArrowRightIcon
-                  onClick={() => {
-                    history.push("/Messages/" + comment.id);
-                  }}
-                />
-              </IconButton>
-              <ListItemSecondaryAction>
-                <IconButton edge="end">
-                  <DeleteOutlined onClick={() => handleDelete(comment.id)} />
-                </IconButton>
-              </ListItemSecondaryAction>
+          <div key={comment.id}>
+            <ListItem>
+              <Container>
+                <Card>
+                  {comment.authorId === getId() ? (
+                    <CardHeader
+                      action={
+                        <div>
+                          <CommentUpdate
+                            comment={comment}
+                            getComments={getComments}
+                          ></CommentUpdate>
+                          <IconButton onClick={() => handleDelete(comment.id)}>
+                            <DeleteOutline />
+                          </IconButton>
+                          <Button
+                            onClick={() => {
+                              history.push("/Messages/" + comment.id);
+                            }}
+                            endIcon={<KeyboardArrowRightIcon />}
+                          >
+                            看留言
+                          </Button>
+                        </div>
+                      }
+                      title={"來自 " + comment.author + " 同學的評論"}
+                    />
+                  ) : (
+                    <CardHeader
+                      action={
+                        <IconButton>
+                          <KeyboardArrowRightIcon
+                            onClick={() => {
+                              history.push("/Messages/" + comment.id);
+                            }}
+                          />
+                        </IconButton>
+                      }
+                      title={"來自 " + comment.author + " 同學的評論"}
+                    />
+                  )}
+                  <CardContent>
+                    <Rating value={comment.rating} readOnly />
+                    <p>
+                      <Typography variant="body1" color="Primary">
+                        教學方式 : {comment.teaching}
+                      </Typography>
+                    </p>
+                    <p>
+                      <Typography variant="body1" color="Primary">
+                        作業方式: {comment.assignment}
+                      </Typography>
+                    </p>
+                    <p>
+                      <Typography variant="body1" color="Primary">
+                        評分方式: {comment.grading}
+                      </Typography>
+                    </p>
+
+                    <Typography variant="body1" color="Primary">
+                      其他補充:
+                      {comment.comment}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Container>
             </ListItem>
             <Divider variant="inset" component="li" />
-          </>
+          </div>
         ))}
       </List>
     </Container>

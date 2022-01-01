@@ -3,7 +3,6 @@ import Courses from "./pages/Courses";
 import Comments from "./pages/Comments";
 import CreateComment from "./pages/CreateComment";
 import Layout from "./components/Layout";
-import CreateMessage from "./pages/CreateMessage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import NoFoundPage from "./pages/NoFoundPage";
@@ -38,9 +37,6 @@ function App() {
           </Route>
           <Route path="/Messages/:id">
             <Messages />
-          </Route>
-          <Route exact path="/CreateMessage">
-            <CreateMessage />
           </Route>
           <Route exact path="/CourseLike">
             <CourseLike />

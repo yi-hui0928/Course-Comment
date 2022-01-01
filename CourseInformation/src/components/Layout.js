@@ -70,7 +70,7 @@ const LoginMenuItems = [
     path: "/userpost",
   },
   {
-    text: "喜歡的課程",
+    text: "關注的課程",
     icon: <FavoriteIcon color="secondary" />,
     path: "/courselike",
   },
