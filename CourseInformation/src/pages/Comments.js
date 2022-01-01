@@ -24,6 +24,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import { url } from "../utils/localStorge";
+import CreateComment from "./CreateComment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,6 +74,7 @@ export default function Comments() {
       });
   }, [id]);
 
+  //TODO: delete 和 update 和create
   const handleDelete = async (id) => {
     await fetch("http://localhost:8000/comments/" + id, {
       method: "DELETE",
@@ -113,7 +115,7 @@ export default function Comments() {
           </p>
         </CardContent>
         <Button
-          onClick={() => history.push("/createcomment")}
+          onClick={() => history.push("/createcomment/" + id)}
           variant="contained"
           color="primary"
           className={classes.button}
@@ -132,7 +134,7 @@ export default function Comments() {
         {comments.map((comment) => (
           <ListItem key={comment.id}>
             <ListItemAvatar>
-              <Avatar>{comment.category}</Avatar>
+              <Avatar>{comment.author}</Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={comment.author}

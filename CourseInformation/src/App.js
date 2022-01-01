@@ -7,7 +7,9 @@ import CreateMessage from "./pages/CreateMessage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import NoFoundPage from "./pages/NoFoundPage";
-import Member from "./pages/Member";
+import Member from "./pages/members/Member";
+import CourseLike from "./pages/members/CourseLike";
+import UserPost from "./pages/members/UserPost";
 function App() {
   return (
     <Router>
@@ -22,17 +24,24 @@ function App() {
           <Route exact path="/register">
             <Register />
           </Route>
+          {/* TODO: 會員要新增一些功能 */}
           <Route exact path="/member">
             <Member />
           </Route>
-          <Route path="/Comments/:id">
+          <Route exact path="/Comments/:id">
             <Comments />
           </Route>
-          <Route path="/CreateComment">
+          <Route exact path="/CreateComment/:id">
             <CreateComment />
           </Route>
-          <Route path="/CreateMessage">
+          <Route exact path="/CreateMessage">
             <CreateMessage />
+          </Route>
+          <Route exact path="/CourseLike">
+            <CourseLike />
+          </Route>
+          <Route exact path="/userpost">
+            <UserPost />
           </Route>
           <Route path="/*">
             <NoFoundPage />

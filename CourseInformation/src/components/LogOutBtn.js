@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { getToken, url } from "../utils/localStorge";
+import axios from "axios";
 
 function LogOutBtn() {
   const History = useHistory();
@@ -11,19 +12,26 @@ function LogOutBtn() {
 
     if (result) {
       //打api
-      fetch(url + "logout", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-          Accept: "application/json",
-        },
-      })
-        .then((res) => res.json())
+      axios
+        .post(
+          url + "logout",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${getToken()}`,
+              Accept: "application/json",
+            },
+          }
+        )
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
           localStorage.removeItem("userData");
           History.push("/");
           return;
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+          window.alert(error.response.data.message);
         });
     }
   };

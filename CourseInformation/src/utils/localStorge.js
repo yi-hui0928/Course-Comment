@@ -1,3 +1,6 @@
+import axios from "axios";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+
 export const url = "http://localhost:8000/api/";
 
 export function getToken() {
@@ -22,7 +25,7 @@ export function getId() {
   return id;
 }
 export function isLogin() {
-  if (JSON.parse(localStorage.getItem("userData")) != undefined) {
+  if (JSON.parse(localStorage.getItem("userData"))) {
     return true;
   } else {
     return false;

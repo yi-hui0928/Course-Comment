@@ -1,5 +1,5 @@
 import React from "react";
-import LogOutBtn from "../components/LogOutBtn";
+import LogOutBtn from "../../components/LogOutBtn";
 function Member() {
   return (
     <div>
