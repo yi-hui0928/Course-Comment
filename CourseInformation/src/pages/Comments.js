@@ -25,6 +25,8 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import { url } from "../utils/localStorge";
 import CreateComment from "./CreateComment";
+import { Divider } from "@material-ui/core";
+import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -132,27 +134,52 @@ export default function Comments() {
       </Typography>
       <List className={classes.root}>
         {comments.map((comment) => (
-          <ListItem key={comment.id}>
-            <ListItemAvatar>
-              <Avatar>{comment.author}</Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={comment.author}
-              secondary={comment.comment}
-            />
-            <IconButton>
-              <KeyboardArrowRightIcon
-                onClick={() => {
-                  history.push("/CreateMessage");
-                }}
+          <>
+            <ListItem key={comment.id}>
+              <ListItemAvatar>
+                <Avatar>{comment.author}</Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={comment.author}
+                secondary={comment.comment}
               />
-            </IconButton>
-            <ListItemSecondaryAction>
-              <IconButton edge="end">
-                <DeleteOutlined onClick={() => handleDelete(comment.id)} />
+              <IconButton>
+                <KeyboardArrowRightIcon
+                  onClick={() => {
+                    history.push("/CreateMessage");
+                  }}
+                />
               </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+              <ListItemText
+                primary={comment.author}
+                secondary={comment.comment}
+              >
+                <br />
+                Assignment: {comment.assignment} {/*不知道為什麼沒有顯示出來 */}
+                <br />
+                Grading: {comment.grading}
+              </ListItemText>
+              <Rating
+                name="half-rating-read"
+                defaultValue={comment.rating}
+                precision={0.5}
+                readOnly
+              />
+              <IconButton>
+                <KeyboardArrowRightIcon
+                  onClick={() => {
+                    history.push("/Messages/" + comment.id);
+                  }}
+                />
+              </IconButton>
+              <ListItemSecondaryAction>
+                <IconButton edge="end">
+                  <DeleteOutlined onClick={() => handleDelete(comment.id)} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </>
         ))}
       </List>
     </Container>

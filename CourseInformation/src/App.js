@@ -10,6 +10,8 @@ import NoFoundPage from "./pages/NoFoundPage";
 import Member from "./pages/members/Member";
 import CourseLike from "./pages/members/CourseLike";
 import UserPost from "./pages/members/UserPost";
+import Messages from "./pages/Messages";
+
 function App() {
   return (
     <Router>
@@ -33,6 +35,9 @@ function App() {
           </Route>
           <Route exact path="/CreateComment/:id">
             <CreateComment />
+          </Route>
+          <Route path="/Messages/:id">
+            <Messages />
           </Route>
           <Route exact path="/CreateMessage">
             <CreateMessage />
